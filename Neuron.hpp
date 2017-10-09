@@ -6,6 +6,8 @@
 //
 //
 
+#pragma once 
+
 #ifndef Neuron_hpp
 #define Neuron_hpp
 
@@ -14,21 +16,28 @@
 class Neuron{
     private:
 //=============Attributs==============
-        double MembranePotential_;
-        int NbrSpikes_;
-        double TimeSpikes_;
-        bool refractory_;
-        double RefractoryBreakTime_;
+    double MembranePotential_;
+    long NbrSpikes_; //Num of spikes
+    long TimeSpikes_; //Time of last spike
+    bool refractory_; // Is Refractory or not
+    long RefractoryBreakStep_; //Time after spike during which MembranePotential_ =0
+    double InputCurrent_; // External Current
+    long tSimulation_; //Internal Clock
     
     public:
 //=============Constructeurs=========
-        Neuron();
-        Neuron(double MembranePotential, int NbrSpikes, double TimeSpikes, bool refractory);
+    Neuron();
 //=============Destructeur===========
-       ~Neuron() = default;
+    ~Neuron() = default;
 //=============Methodes==============
-        void update(double h, double I, double tStart, double tStop, double a , double b);
-        std::string int2strg(double a) const;
+    bool update(long StepsTaken);
+    std::string int2strg(double a) const;
+//=============Getters===============
+    double GetMembranePotential_() const;
+    long GetTimeSpikes_() const;
+//=============Setters===============
+    void SetMembranePotential_(double MembranePotential);
+    void SetInputCurrent_(double InputCurrent);
 };
 
 

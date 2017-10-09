@@ -12,45 +12,46 @@
 #include <cmath>
 #include <iostream>
 #include <sstream>
-#include <fstream>
+#include <fstream> //maybe remove some
 
 using namespace std;
 
 //Constructeurs
-Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0.0), TimeSpikes_(0.0),refractory_(false), RefractoryBreakTime_(0.0){}
-Neuron::Neuron(double MembranePotential, int NbrSpikes, double TimeSpikes, bool refractory): 
-MembranePotential_(MembranePotential), NbrSpikes_(NbrSpikes), TimeSpikes_(TimeSpikes), refractory_(refractory), RefractoryBreakTime_(0.0){}
+Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false),
+ RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){}
+
 
 //Methodes
-void Neuron :: update(double h, double I, double tStart, double tStop, double a, double b){
-    double tSimulation(tStart);
-    double InputCurrent;
-    ofstream sortie("MembranePotential", ios::out|ios::app);
-    if(sortie.fail()){
-        cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
+bool Neuron :: update(long StepsTaken){
+    if(StepsTaken<=0){
+        return false;
     }
-    while(tSimulation < tStop){
-        if((tSimulation<a) or (tSimulation>b)){
-            InputCurrent = 0.0;
-        }else{
-            InputCurrent = I ;
-            if(refractory_){
-                MembranePotential_ = 0.0;
-                RefractoryBreakTime_ += h;
-                if(RefractoryBreakTime_>TAU){
-					RefractoryBreakTime_= 0.0;
-					refractory_= false;
-				}
-            }else if(MembranePotential_ > MembranePotentialTHRESHOLD){
-                TimeSpikes_ = tSimulation;
-                refractory_ = true;
-            }
+    bool HasSpike(false);
+    long tStop = tSimulation_+StepsTaken;
+    while(tSimulation_ < tStop){
+        if(MembranePotential_ > MembranePotentialTHRESHOLD){
+            //Membrane potential is above threshold.
+            refractory_ = true;
+            HasSpike = true;
+            //We store the spike and move on.
+            TimeSpikes_ = tSimulation_;
+            ++NbrSpikes_;
         }
-        sortie << int2strg(MembranePotential_) << endl;
-        MembranePotential_= (exp(-h/TAU)*MembranePotential_)+(InputCurrent*RESISTANCE*(1-exp(-h/TAU)));
-        tSimulation +=  h;
+
+        if(refractory_){
+            //Neuron is refractory => reset memebrane potential to 0
+            MembranePotential_ = 0.0;
+            ++RefractoryBreakStep_;
+            if(RefractoryBreakStep_ > REFRACTORYSTEP){
+                RefractoryBreakStep_= 0.0;
+                refractory_= false;
+            }
+        }else{
+            MembranePotential_= (exp(-H/TAU)*MembranePotential_)+(InputCurrent_*20.0*(1-exp(-H/TAU)));
+        }
+    ++tSimulation_;
     }
-    sortie.close();
+    return HasSpike;
 }
 
 string Neuron::int2strg(double a) const{
@@ -59,3 +60,21 @@ string Neuron::int2strg(double a) const{
     string str = s.str();
     return str;
 }
+
+//Getters
+double Neuron::GetMembranePotential_() const{
+    return MembranePotential_;
+}
+
+long Neuron::GetTimeSpikes_() const{
+    return TimeSpikes_;
+}
+
+//Setters
+void Neuron::SetMembranePotential_(double MembranePotential){
+    MembranePotential_=MembranePotential;
+}
+void Neuron::SetInputCurrent_(double InputCurrent){
+    InputCurrent_=InputCurrent;
+}
+
