@@ -40,7 +40,7 @@ int main(int argc, char* argv[]){
             N1.SetInputCurrent_(Iext);
             HasSpikes = N1.update(1);
             if(HasSpikes){
-                cout<< "Spikes at t = "<< N1.GetTimeSpikes_()*H<<" ms." <<endl;
+                cout<< "Spikes at t = "<< (N1.GetTimeSpikes_()+a)*H<<" ms." <<endl;
                 HasSpikes = false;
             }
         }
