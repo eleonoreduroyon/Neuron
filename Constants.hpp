@@ -8,5 +8,6 @@ double const C(1);
 double const RefractoryTIME(2.0); //How long the break is
 double const H(.1); //
 long const REFRACTORYSTEP = RefractoryTIME*10; //
+double const JAMPLITUDE(.2);
 
 #endif

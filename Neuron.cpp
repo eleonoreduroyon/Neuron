@@ -61,6 +61,10 @@ string Neuron::int2strg(double a) const{
     return str;
 }
 
+void Neuron::recieve(){
+    MembranePotential_ += JAMPLITUDE;
+}
+
 //Getters
 double Neuron::GetMembranePotential_() const{
     return MembranePotential_;
@@ -68,6 +72,10 @@ double Neuron::GetMembranePotential_() const{
 
 long Neuron::GetTimeSpikes_() const{
     return TimeSpikes_;
+}
+
+vector<Neuron*> Neuron::GetConnectedNeurons_ const{
+    return ConnectedNeurons_;
 }
 
 //Setters

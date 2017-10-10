@@ -12,6 +12,7 @@
 #define Neuron_hpp
 
 #include <string>
+#include <vector>
 
 class Neuron{
     private:
@@ -23,6 +24,7 @@ class Neuron{
     long RefractoryBreakStep_; //Time after spike during which MembranePotential_ =0
     double InputCurrent_; // External Current
     long tSimulation_; //Internal Clock
+    vector<Neuron*> ConnectedNeurons_;
     
     public:
 //=============Constructeurs=========
@@ -31,10 +33,12 @@ class Neuron{
     ~Neuron() = default;
 //=============Methodes==============
     bool update(long StepsTaken);
+    void recieve();
     std::string int2strg(double a) const;
 //=============Getters===============
     double GetMembranePotential_() const;
     long GetTimeSpikes_() const;
+    vector<Neuron*> GetConnectedNeurons_ const;
 //=============Setters===============
     void SetMembranePotential_(double MembranePotential);
     void SetInputCurrent_(double InputCurrent);
