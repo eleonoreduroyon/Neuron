@@ -31,8 +31,8 @@ int main(int argc, char* argv[]){
 		N1.push_back(new Neuron);
 		++compteur;
 	}
-    assert(N1[0] != NULL);
-    assert(N1[1] != NULL);
+    /*assert(N1[0] != NULL);
+    assert(N1[1] != NULL);*/
     N1[0]->SetConnectedNeuron_(N1[1]);
     double Iext(1.01);
     long a(1000);

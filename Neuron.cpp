@@ -19,9 +19,10 @@ using namespace std;
 //Constructeurs
 Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false), 
 	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){
-        for( auto n : Buffer_){
-            n=0;
+        for(size_t n(0); n < DelaiSTEP;++n){
+            Buffer_.push_back(0);
         }
+        
     }
 
 //Destructeurs
@@ -60,7 +61,7 @@ bool Neuron :: update(long StepsTaken, long clock){
             MembranePotential_= (exp(-H/TAU)*MembranePotential_)+(InputCurrent_*20.0*(1-exp(-H/TAU)));
             recieve(Buffer_[clock%DelaiSTEP]);
             Buffer_[clock%DelaiSTEP]=0;
-          
+         }
     ++tSimulation_;
     }
     return HasSpike;
@@ -90,7 +91,7 @@ vector<Neuron*> Neuron::GetConnectedNeurons_() const{
     return ConnectedNeurons_;
 }
 
-std::array<long, DelaiSTEP> Neuron::GetBuffer_() const{
+vector<long> Neuron::GetBuffer_() const{
     return Buffer_;
 }
 
