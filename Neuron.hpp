@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 class Neuron{
     private:
@@ -23,6 +24,7 @@ class Neuron{
     double InputCurrent_; // External Current
     long tSimulation_; //Internal Clock
     std::vector<Neuron*> ConnectedNeurons_;
+    std::array<long, DelaiSTEP> Buffer_;
     
     public:
 //=============Constructeurs=========
@@ -30,17 +32,19 @@ class Neuron{
 //=============Destructeur===========
     ~Neuron();
 //=============Methodes==============
-    bool update(long StepsTaken);
-    void recieve();
+    bool update(long StepsTaken, long clock);
+    void recieve(int valeur);
     std::string int2strg(double a) const;
 //=============Getters===============
     double GetMembranePotential_() const;
     long GetTimeSpikes_() const;
     std::vector<Neuron*> GetConnectedNeurons_() const ;
+    std::array<long, DelaiSTEP> GetBuffer_() const;
 //=============Setters===============
     void SetMembranePotential_(double MembranePotential);
     void SetInputCurrent_(double InputCurrent);
     void SetConnectedNeuron_(Neuron*  n);
+    void SetBuffer_(int i);
 };
 
 

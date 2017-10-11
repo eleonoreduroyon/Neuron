@@ -52,13 +52,13 @@ int main(int argc, char* argv[]){
                 N1[i]->SetMembranePotential_(0.0);
             }else{
                 N1[i]->SetInputCurrent_(Iext);
-                HasSpikes = N1[i]->update(1);
+                HasSpikes = N1[i]->update(1, clock);
                 if(HasSpikes){
                     //we add a-tStart because tSimulation  starts at a
                     cout<< "Spikes at t = "<< (N1[i]->GetTimeSpikes_()+a)*H << " ms." <<endl;
                     if(N1[i]->GetConnectedNeurons_().size() != 0){
 						for(size_t j(0); j<N1[i]->GetConnectedNeurons_().size(); ++j){
-                            N1[i]->GetConnectedNeurons_()[j]->recieve();
+                            N1[i]->GetConnectedNeurons_()[j]->SetBuffer_(clock%DelaiSTEP);
 						}
                     }
                     HasSpikes = false;

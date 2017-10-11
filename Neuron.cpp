@@ -18,18 +18,21 @@ using namespace std;
 
 //Constructeurs
 Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false), 
-	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){}
+	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){
+        for( auto n : Buffer_){
+            n=0;
+        }
+    }
 
 //Destructeurs
 Neuron::~Neuron(){
 	for(size_t i(0); i <ConnectedNeurons_.size(); ++i){
 		delete ConnectedNeurons_[i];
-		//ConnectedNeurons_[i]=nullptr;
 	}
 }
 
 //Methodes
-bool Neuron :: update(long StepsTaken){
+bool Neuron :: update(long StepsTaken, long clock){
     if(StepsTaken<=0){
         return false;
     }
@@ -55,7 +58,9 @@ bool Neuron :: update(long StepsTaken){
             }
         }else{
             MembranePotential_= (exp(-H/TAU)*MembranePotential_)+(InputCurrent_*20.0*(1-exp(-H/TAU)));
-        }
+            recieve(Buffer_[clock%DelaiSTEP]);
+            Buffer_[clock%DelaiSTEP]=0;
+          
     ++tSimulation_;
     }
     return HasSpike;
@@ -68,8 +73,8 @@ string Neuron::int2strg(double a) const{
     return str;
 }
 
-void Neuron::recieve(){
-    MembranePotential_ += JAMPLITUDE;
+void Neuron::recieve(int valeur){
+    MembranePotential_ += (valeur*JAMPLITUDE);
 }
 
 //Getters
@@ -85,6 +90,10 @@ vector<Neuron*> Neuron::GetConnectedNeurons_() const{
     return ConnectedNeurons_;
 }
 
+std::array<long, DelaiSTEP> Neuron::GetBuffer_() const{
+    return Buffer_;
+}
+
 //Setters
 void Neuron::SetMembranePotential_(double MembranePotential){
     MembranePotential_=MembranePotential;
@@ -95,5 +104,9 @@ void Neuron::SetInputCurrent_(double InputCurrent){
 
 void Neuron::SetConnectedNeuron_(Neuron*  n){
 	ConnectedNeurons_.push_back(n);
+}
+
+void Neuron::SetBuffer_(int i){
+    Buffer_[i] += 1;
 }
 
