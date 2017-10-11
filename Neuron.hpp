@@ -40,7 +40,7 @@ class Neuron{
 //=============Setters===============
     void SetMembranePotential_(double MembranePotential);
     void SetInputCurrent_(double InputCurrent);
-    void SetConnectedNeuron_(Neuron* n);
+    void SetConnectedNeuron_(Neuron*  n);
 };
 
 

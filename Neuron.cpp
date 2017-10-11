@@ -93,7 +93,7 @@ void Neuron::SetInputCurrent_(double InputCurrent){
     InputCurrent_=InputCurrent;
 }
 
-void Neuron::SetConnectedNeuron_(Neuron* n){
+void Neuron::SetConnectedNeuron_(Neuron*  n){
 	ConnectedNeurons_.push_back(n);
 }
 
