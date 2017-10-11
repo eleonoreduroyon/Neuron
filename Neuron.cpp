@@ -17,9 +17,16 @@
 using namespace std;
 
 //Constructeurs
-Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false),
- RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){}
+Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false), 
+	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){}
 
+//Destructeurs
+Neuron::~Neuron(){
+	for(size_t i(0); i <ConnectedNeurons_.size(); ++i){
+		delete ConnectedNeurons_[i];
+		//ConnectedNeurons_[i]=nullptr;
+	}
+}
 
 //Methodes
 bool Neuron :: update(long StepsTaken){
@@ -74,7 +81,7 @@ long Neuron::GetTimeSpikes_() const{
     return TimeSpikes_;
 }
 
-vector<Neuron*> Neuron::GetConnectedNeurons_ const{
+vector<Neuron*> Neuron::GetConnectedNeurons_() const{
     return ConnectedNeurons_;
 }
 
@@ -84,5 +91,9 @@ void Neuron::SetMembranePotential_(double MembranePotential){
 }
 void Neuron::SetInputCurrent_(double InputCurrent){
     InputCurrent_=InputCurrent;
+}
+
+void Neuron::SetConnectedNeuron_(Neuron* n){
+	ConnectedNeurons_.push_back(n);
 }
 

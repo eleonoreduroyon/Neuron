@@ -13,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
+#include <cstdlib>
 
 using namespace std;
 
@@ -22,7 +23,9 @@ int main(int argc, char* argv[]){
         cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
     }
 
-    vector<Neuron*> N1(2);
+    vector<Neuron> N1(1);
+    Neuron* n = new Neuron;
+    N1[0].SetConnectedNeuron_(n);
     
     double Iext(1.01);
     long a(1000);
@@ -45,9 +48,9 @@ int main(int argc, char* argv[]){
                 HasSpikes = N1[i].update(1);
                 if(HasSpikes){
                     //we add a-tStart because tSimulation  starts at a
-                    cout<< "Spikes at t = "<< (N1[i].GetTimeSpikes_()+a)*H<<" ms." <  <endl;
-                    for(size_t j(0); j<N1[i].GetConnectedNeurons_.size(); ++j){
-                            N1[i].GetConnectedNeurons_[j].recieve();
+                    cout<< "Spikes at t = "<< (N1[i].GetTimeSpikes_()+a)*H << " ms." <<endl;
+                    for(size_t j(0); j<N1[i].GetConnectedNeurons_().size(); ++j){
+                            N1[i].GetConnectedNeurons_()[j]->recieve();
                     }
                     HasSpikes = false;
                 }
