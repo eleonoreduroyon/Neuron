@@ -66,11 +66,11 @@ int main(int argc, char* argv[]){
             }
             sortie << N1[i]->int2strg(N1[i]->GetMembranePotential_()) << endl;
         }
-        sortie.close();
+        
         ++clock;
     }
  
-   
+   sortie.close();
     return 0;
 }
 
