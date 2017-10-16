@@ -11,28 +11,27 @@
 
 #include <cmath>
 #include <iostream>
-//#include <sstream>
-//#include <fstream> //maybe remove some
+#include <sstream>
+#include <fstream> 
+#include <cassert>
 
 using namespace std;
 
-//Constructeurs
+//========================Constructeurs=======================
 Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false), 
 	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){
         for(size_t n(0); n < DelaiSTEP+1;++n){
             Buffer_.push_back(0);
         }
-        
-    }
-
-//Destructeurs
-Neuron::~Neuron(){
-	for(size_t i(0); i <ConnectedNeurons_.size(); ++i){
-		delete ConnectedNeurons_[i];
-	}
+      assert(TAU != 0);
+      c1 = exp(-H/TAU);
+      c2 = 20.0*(1-c1);
 }
 
-//Methodes
+//=======================Destructeurs==========================
+Neuron::~Neuron(){}
+
+//========================Methodes=============================
 bool Neuron :: update(long StepsTaken, long clock){
     if(StepsTaken<=0){
         return false;
@@ -53,12 +52,14 @@ bool Neuron :: update(long StepsTaken, long clock){
             //Neuron is refractory => reset memebrane potential to 0
             MembranePotential_ = 0.0;
             ++RefractoryBreakStep_;
+            //Reset BreakTime when over
             if(RefractoryBreakStep_ > REFRACTORYSTEP){
+				MembranePotential_ = VRESET;
                 RefractoryBreakStep_= 0.0;
                 refractory_= false;
             }
         }else{
-            MembranePotential_= (exp(-H/TAU)*MembranePotential_)+(InputCurrent_*20.0*(1-exp(-H/TAU)));
+            MembranePotential_= (c1*MembranePotential_)+(InputCurrent_*c2);
             recieve(Buffer_[clock%(DelaiSTEP+1)]);
             Buffer_[clock%(DelaiSTEP+1)]=0;
          }
@@ -75,10 +76,11 @@ string Neuron::int2strg(double a) const{
 }
 
 void Neuron::recieve(int valeur){
+	assert(valeur >= 0);
     MembranePotential_ += (valeur*JAMPLITUDE);
 }
 
-//Getters
+//====================Getters==================
 double Neuron::GetMembranePotential_() const{
     return MembranePotential_;
 }
@@ -91,7 +93,7 @@ vector<long> Neuron::GetBuffer_() const{
     return Buffer_;
 }
 
-//Setters
+//====================Setters====================
 void Neuron::SetMembranePotential_(double MembranePotential){
     MembranePotential_=MembranePotential;
 }
