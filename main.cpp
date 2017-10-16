@@ -19,6 +19,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]){
+	//Open file
     ofstream sortie("MembranePotential", ios::out|ios::app);
     if(sortie.fail()){
         cerr<< "Erreur: impossible d'ecrire dans le fichier"<< endl;
@@ -44,7 +45,7 @@ int main(int argc, char* argv[]){
     double Iext(1.01);  //Amplitude of Current
     long a(1000);   //Start of Step Current
     long b(4000);   //End of Step Current
-    long tStop(5000); //Total Simulation TIme
+    long tStop(5000); //Total Simulation Time
     bool HasSpikes(false);
     long clock(0);
     
@@ -66,7 +67,7 @@ int main(int argc, char* argv[]){
 				} else{
 					N1[i].SetInputCurrent_(0.0);
 				}
-                HasSpikes = N1[i].update(1, clock);
+                HasSpikes = N1[i].update(1,clock);
                 if(HasSpikes){
                     //we add a-tStart because tSimulation  starts at a
                     cout<< "Spikes of "<< i+1 <<" at t = "<< (N1[i].GetTimeSpikes_()+a)*H << " ms." <<endl;
@@ -79,13 +80,13 @@ int main(int argc, char* argv[]){
                     HasSpikes = false;
                 }
             }
+            //Write values of MembranePotential_ in file
             sortie << N1[i].int2strg(N1[i].GetMembranePotential_()) << endl;
         }
-        
         ++clock;
     }
- 
-   sortie.close();
+	//Close file
+    sortie.close();
     return 0;
 }
 
