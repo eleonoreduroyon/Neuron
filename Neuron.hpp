@@ -22,7 +22,6 @@ class Neuron{
     long RefractoryBreakStep_; //Time after spike during which MembranePotential_ =0
     double InputCurrent_; // External Current
     long tSimulation_; //Internal Clock
-    std::vector<Neuron*> ConnectedNeurons_;
     std::vector<long> Buffer_;
     
     public:
@@ -37,12 +36,10 @@ class Neuron{
 //=============Getters===============
     double GetMembranePotential_() const;
     long GetTimeSpikes_() const;
-    std::vector<Neuron*> GetConnectedNeurons_() const ;
     std::vector<long> GetBuffer_() const;
 //=============Setters===============
     void SetMembranePotential_(double MembranePotential);
     void SetInputCurrent_(double InputCurrent);
-    void SetConnectedNeuron_(Neuron*  n);
     void SetBuffer_(int i);
 };
 

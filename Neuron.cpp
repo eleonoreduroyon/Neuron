@@ -11,15 +11,15 @@
 
 #include <cmath>
 #include <iostream>
-#include <sstream>
-#include <fstream> //maybe remove some
+//#include <sstream>
+//#include <fstream> //maybe remove some
 
 using namespace std;
 
 //Constructeurs
 Neuron::Neuron(): MembranePotential_(0.0), NbrSpikes_(0), TimeSpikes_(0),refractory_(false), 
 	RefractoryBreakStep_(0),InputCurrent_(0.0),tSimulation_(0){
-        for(size_t n(0); n < DelaiSTEP;++n){
+        for(size_t n(0); n < DelaiSTEP+1;++n){
             Buffer_.push_back(0);
         }
         
@@ -59,8 +59,8 @@ bool Neuron :: update(long StepsTaken, long clock){
             }
         }else{
             MembranePotential_= (exp(-H/TAU)*MembranePotential_)+(InputCurrent_*20.0*(1-exp(-H/TAU)));
-            recieve(Buffer_[clock%DelaiSTEP]);
-            Buffer_[clock%DelaiSTEP]=0;
+            recieve(Buffer_[clock%(DelaiSTEP+1)]);
+            Buffer_[clock%(DelaiSTEP+1)]=0;
          }
     ++tSimulation_;
     }
@@ -87,10 +87,6 @@ long Neuron::GetTimeSpikes_() const{
     return TimeSpikes_;
 }
 
-vector<Neuron*> Neuron::GetConnectedNeurons_() const{
-    return ConnectedNeurons_;
-}
-
 vector<long> Neuron::GetBuffer_() const{
     return Buffer_;
 }
@@ -101,10 +97,6 @@ void Neuron::SetMembranePotential_(double MembranePotential){
 }
 void Neuron::SetInputCurrent_(double InputCurrent){
     InputCurrent_=InputCurrent;
-}
-
-void Neuron::SetConnectedNeuron_(Neuron*  n){
-	ConnectedNeurons_.push_back(n);
 }
 
 void Neuron::SetBuffer_(int i){
