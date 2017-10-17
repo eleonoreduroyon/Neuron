@@ -39,6 +39,7 @@ class Neuron{
     double GetMembranePotential_() const;
     long GetTimeSpikes_() const;
     std::vector<long> GetBuffer_() const;
+    long GetRefractoryBreakStep_() const;
 //=============Setters===============
     void SetMembranePotential_(double MembranePotential);
     void SetInputCurrent_(double InputCurrent);

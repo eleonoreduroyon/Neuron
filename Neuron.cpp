@@ -93,6 +93,10 @@ vector<long> Neuron::GetBuffer_() const{
     return Buffer_;
 }
 
+long Neuron::GetRefractoryBreakStep_() const{
+	return RefractoryBreakStep_;
+}
+
 //====================Setters====================
 void Neuron::SetMembranePotential_(double MembranePotential){
     MembranePotential_=MembranePotential;
