@@ -22,6 +22,7 @@ TEST(NeuronTEST, TimeSpikes_){
 	spike = n.update(1, 1000+Compteur);
 		if(spike){
 			EXPECT_EQ(n.GetRefractoryBreakStep_(),1);
+			spike = false;
 		}
 	++Compteur;
 	}
