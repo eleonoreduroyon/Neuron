@@ -2,6 +2,7 @@
 #include "Neuron.hpp"
 #include "gtest/gtest.h"
 #include <cmath>
+#include <vector>
 
 //===============MembranePotentialValues============
 TEST(NeuronTEST, PositiveInput){
@@ -17,12 +18,12 @@ TEST(NeuronTEST, PositiveInput){
     n.update(10000,1000);
         //MembranePotential_ should tend towards 20 but never spike
     EXPECT_EQ(0,n.GetNbrSpikes_());
-    EXPECT_GT(1E-4, std::fabs(19.9999 - n.GetMembranePotential_()));
+    EXPECT_GT(1E-3, std::fabs(19.9999 - n.GetMembranePotential_()));
     //*2*
         //MembranePotential_ decay towards 0 without input current
     n.SetInputCurrent_(0.0);
     n.update(2000,1000);
-    EXPECT_NEAR(0,n.GetMembranePotential_(), 1E-4);
+    EXPECT_NEAR(0,n.GetMembranePotential_(), 1E-3);
 }
 
 TEST(NeuronTEST, NegativeInput){
@@ -38,12 +39,12 @@ TEST(NeuronTEST, NegativeInput){
     n.update(10000,1000);
         //MembranePotential_ should tend towards 20 but never spike
     EXPECT_EQ(0,n.GetNbrSpikes_());
-    EXPECT_GT(1E-4, std::fabs(-19.9999 - n.GetMembranePotential_()));
+    EXPECT_GT(1E-3, std::fabs(-19.9999 - n.GetMembranePotential_()));
     //*2*
         //MembranePotential_ decay towards 0 without input current
     n.SetInputCurrent_(0.0);
     n.update(2000,1000);
-    EXPECT_NEAR(0,n.GetMembranePotential_(), 1E-4);
+    EXPECT_NEAR(0,n.GetMembranePotential_(), 1E-3);
 }
 
 //=====================SpikeTime========================
@@ -59,9 +60,9 @@ TEST(NeuronTEST, TimeSpikes_){
     EXPECT_EQ(0.0, n.GetMembranePotential_());
     
     //Waiting for second spike
-    n.update(943,1000);
+    n.update(944,1000);
     EXPECT_EQ(1, n.GetNbrSpikes_());
-    n.update(1);
+    n.update(1,1000+945);
     EXPECT_EQ(2, n.GetNbrSpikes_());
 }
 
@@ -69,10 +70,12 @@ TEST(NeuronTEST, TimeSpikes_){
 TEST(NeuronTEST, NoPSSpike){
     Neuron n1;
     Neuron n2;
+   
     n1.SetInputCurrent_(1.01);
-    for(int i=0; i<925+DelaiSTEP; ++i){
+    for(int i=0; i<925+13; ++i){
         if(n1.update(1,1000+i)){
             EXPECT_EQ(0.0, n1.GetMembranePotential_());
+            n2.SetBuffer_(1);
         }
         n2.update(1,1000+i);
     }
@@ -84,16 +87,17 @@ TEST(NeuronTEST, WithPSSpike){
     Neuron n2;
     n1.SetInputCurrent_(1.01);
     n2.SetInputCurrent_(1.0);
-    for(int i=0; i<1869+DelaiSTEP; ++i){
+    for(int i=0; i<1869+13; ++i){
         if(n1.update(1,1000+i)){
             EXPECT_EQ(0.0, n1.GetMembranePotential_());
+            n2.SetBuffer_(1);
         }
         n2.update(1,1000+i);
     }
     
     //Before n2 spikes
     EXPECT_EQ(0,n2.GetNbrSpikes_());
-    n2.update(1,1869+DelaiSTEP+1000);
+    n2.update(1,1869+13+1000);
     //After n2 spikes
     EXPECT_EQ(0,n2.GetMembranePotential_());
     EXPECT_EQ(1,n2.GetNbrSpikes_());
