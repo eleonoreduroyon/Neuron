@@ -90,11 +90,10 @@ TEST(NeuronTEST, WithPSSpike){
         }
         n2.update(1,1000+i);
     }
-    EXPECT_EQ(0.1,n2.GetMembranePotential_());
     
     //Before n2 spikes
     EXPECT_EQ(0,n2.GetNbrSpikes_());
-    n2.update(1,1869+DelaiSTEP+1000+1);
+    n2.update(1,1869+DelaiSTEP+1000);
     //After n2 spikes
     EXPECT_EQ(0,n2.GetMembranePotential_());
     EXPECT_EQ(1,n2.GetNbrSpikes_());
