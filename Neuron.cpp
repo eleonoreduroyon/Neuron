@@ -97,6 +97,9 @@ long Neuron::GetRefractoryBreakStep_() const{
 	return RefractoryBreakStep_;
 }
 
+long Neuron::GetNbrSpikes_() const(){
+    return NbrSpikes_;
+}
 //====================Setters====================
 void Neuron::SetMembranePotential_(double MembranePotential){
     MembranePotential_=MembranePotential;
